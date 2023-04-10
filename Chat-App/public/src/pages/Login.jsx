@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
-import Logo from "../assests/logo.svg"
+import Logo from "../assests/logo.svg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { loginRoute } from "../utils/APIRoutes";
@@ -12,7 +12,7 @@ export default function Login() {
   const [values, setValues] = useState({ username: "", password: "" });
   const toastOptions = {
     position: "bottom-right",
-    autoClose: 5000,
+    autoClose: 8000,
     pauseOnHover: true,
     draggable: true,
     theme: "dark",

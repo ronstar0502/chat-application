@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-function Chat() {
+export default function Chat() {
+
   return (
-    <div>chat</div>
+    <>
+      <div>
+        Hello Chat
+      </div>
+    </>
+    
+
   )
 }
 
-export default Chat
+
