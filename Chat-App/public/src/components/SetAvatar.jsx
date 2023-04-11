@@ -6,29 +6,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
-import getRandomAvatar from "./randomAvatar";
-import { BigHead } from "@bigheads/core";
+import AvatarWithName from "./AvatarWithName";
 
 
-const AvatarWithName = ({ name }) => {
-  const [avatarUrl, setAvatarUrl] = useState('');
-
-  useEffect(() => {
-    const url = `https://avatars.dicebear.com/api/avataaars/${name}.svg`;
-    setAvatarUrl(url);
-  }, [name]);
-
-  return (
-    <div>
-      {avatarUrl && <img src={avatarUrl} alt={`${name} Avatar`} height="100" />}
-    </div>
-  );
-}
 
 export default function SetAvatar() {
   const navigate = useNavigate();
   const [avatars, setAvatars] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
   
   const toastOptions = {
@@ -39,10 +24,10 @@ export default function SetAvatar() {
     theme: "dark",
   };
 
-  /*useEffect(async () => {
+  useEffect(() => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
       navigate("/login");
-  }, []);*/
+  }, []);
 
   useEffect(()=>{
     getRandomAvatarNames()
@@ -74,22 +59,12 @@ export default function SetAvatar() {
     }
   };
 
-  /*const getRandomAvatars=(() => {
-    const data = [];
-    for (let i = 0; i < 4; i++) {
-      const avt = getRandomAvatar();
-      data.push(avt)
-    }
-    setAvatars(data);
-    console.log(avatars)
-    setIsLoading(false);
-  });*/
 
-  const getRandomAvatarNames=()=>{
+  const  getRandomAvatarNames=()=>{
     const names = []
     for (let i = 0; i < 4; i++) {
-    const randomName = Math.random().toString(36).substring(7)
-    names.push(randomName);
+       const randomName = Math.random().toString(36).substring(7)
+      names.push(randomName);
     }
     setAvatars(names)
     setIsLoading(false)
@@ -111,12 +86,14 @@ export default function SetAvatar() {
           <div className="avatars">
             {avatars.map((avatar, index) => {
               return (
-                <div
+                <div 
                   className={`avatar ${
                     selectedAvatar === index ? "selected" : ""
                   }`}
+                  key={index}
+                  onClick={() => setSelectedAvatar(index)}
                 >
-                  <AvatarWithName key={index} name={avatar} onClick={() => setSelectedAvatar(index)} />
+                  <AvatarWithName key={index}  name={avatar}  alt="avatar"  isSelected={selectedAvatar === index} className="image"/>
                 </div>
               );
             })}
@@ -141,11 +118,9 @@ const Container = styled.div`
   background-color: #131324;
   height: 100vh;
   width: 100vw;
-
   .loader {
     max-inline-size: 100%;
   }
-
   .title-container {
     h1 {
       color: white;
@@ -154,7 +129,6 @@ const Container = styled.div`
   .avatars {
     display: flex;
     gap: 2rem;
-
     .avatar {
       border: 0.4rem solid transparent;
       padding: 0.4rem;
@@ -163,7 +137,7 @@ const Container = styled.div`
       justify-content: center;
       align-items: center;
       transition: 0.5s ease-in-out;
-      img {
+      .image {
         height: 6rem;
         transition: 0.5s ease-in-out;
       }
@@ -186,4 +160,4 @@ const Container = styled.div`
       background-color: #4e0eff;
     }
   }
-`;
+`
