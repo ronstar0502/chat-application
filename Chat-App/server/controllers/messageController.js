@@ -8,6 +8,7 @@ module.exports.addMessage = async (req, res, next) => {
             users:[from,to],
             sender:from
         })
+        console.log(data)
         if(data){
             return res.json({msg:"Message Added Successfully"})
         }
@@ -22,18 +23,18 @@ module.exports.getAllMessages = async (req, res, next) => {
         const{from,to}=req.body
         const messages = await messageModel.find({
             users:{
-                $all: [from,to],
+                $all: [from, to],
             },
         }).sort({updateAt:1})
-
+        console.log(messages)
         const projectMessages = messages.map((msg)=>{
             return{
                 fromSelf:msg.sender.toString()===from,
-                message:msg.messages.text,
+                message:msg.message,
             }
         })
-
-        return res.json(projectMessages)
+        console.log()
+        res.json(projectMessages)
     } catch (ex) {
         next(ex)
     }

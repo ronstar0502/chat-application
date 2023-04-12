@@ -15,28 +15,32 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
 
+  async function fetchMessages() {
+    try {
+      const data = await JSON.parse(
+        localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+      );
+      const response = await axios.post(getAllMessagesRoute, {
+        from: data._id,
+        to: currentChat._id,
+      });
+      console.log(response.data);
+      setMessages(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (currentChat) {
+      fetchMessages();
+    }
+  }, [currentChat]);
+
   useEffect(() => {
     if (currentChat && currentUser) {
       setCurrentContactName(currentChat.username);
       setCurrentContactImg(currentChat.avatarImage);
-    }
-  }, [currentChat]);
-
-  async function fetchMessages() {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-    );
-    const response = await axios.post(getAllMessagesRoute, {
-      from: data._id,
-      to: currentChat._id,
-    });
-    console.log(response.data)
-    setMessages(response.data);
-  }
-
-  useEffect(() => {
-    if(currentChat){
-      fetchMessages();
     }
   }, [currentChat]);
 
@@ -45,11 +49,11 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
     );
     socket.emit("send-msg", {
+      from: data._id,
       to: currentChat._id,
-      from: currentUser._id,
       message: msg,
     });
-    await axios.post(sendMessageRoute, {
+    await axios.post(`${sendMessageRoute}`, {
       from: data._id,
       to: currentChat._id,
       message: msg,
@@ -61,7 +65,7 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
   };
 
   useEffect(() => {
-    if (socket.current) {
+    if (socket) {
       socket.on("msg-received", (msg) => {
         setArrivalMessage({ fromSelf: false, message: msg });
       });
@@ -69,7 +73,9 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
   }, []);
 
   useEffect(() => {
-    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+    if (arrivalMessage) {
+      setMessages((prev) => [...prev, arrivalMessage]);
+    }
   }, [arrivalMessage]);
 
   useEffect(() => {
@@ -98,14 +104,14 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
           <div className="chat-messages">
             {messages.map((message) => {
               return (
-                <div ref={scrollRef} key={uuidv4}>
+                <div ref={scrollRef} key={uuidv4()}>
                   <div
                     className={`message ${
                       message.fromSelf ? "sended" : "received"
                     }`}
                   >
-                    <div className="content">
-                      <p>{message.message}</p>
+                    <div className="content" >
+                      <p>{message.message.text}</p>
                     </div>
                   </div>
                 </div>
