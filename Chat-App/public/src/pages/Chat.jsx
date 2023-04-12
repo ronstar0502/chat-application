@@ -9,7 +9,7 @@ import Welcome from "../components/Welcome";
 import ChatContainer from "../components/ChatContainer";
 
 export default function Chat() {
-  const socket = useRef()
+  const socket =io(host)
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
@@ -36,7 +36,6 @@ export default function Chat() {
 
   useEffect(()=>{
     if(currentUser){
-      socket.current = io(host)
       socket.emit("add-user",currentUser._id)
     }
   },[currentUser])
@@ -46,9 +45,7 @@ export default function Chat() {
       if (currentUser) {
         if (currentUser.isAvatarImageSet) {
           const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-          console.log(data.data)
           setContacts(data.data);
-          console.log(contacts)
         } else {
           navigate("/setAvatar");
         }

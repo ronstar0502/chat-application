@@ -3,7 +3,6 @@ import styled from "styled-components";
 import AvatarWithName from "./AvatarWithName";
 import Logout from "./Logout";
 import ChatInput from "./ChatInput";
-import Messages from "./Messages";
 import axios from "axios";
 import { getAllMessagesRoute, sendMessageRoute } from "../utils/APIRoutes";
 import {v4 as uuidv4} from "uuid"
@@ -31,18 +30,21 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
       from: data._id,
       to: currentChat._id,
     });
+    console.log(response.data)
     setMessages(response.data);
   }
 
   useEffect(() => {
-    fetchMessages();
+    if(currentChat){
+      fetchMessages();
+    }
   }, [currentChat]);
 
   const handleSendMsg = async (msg) => {
     const data = await JSON.parse(
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
     );
-    socket.current.emit("send-msg", {
+    socket.emit("send-msg", {
       to: currentChat._id,
       from: currentUser._id,
       message: msg,
