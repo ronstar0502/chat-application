@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Logo from "../assests/logo.svg";
 import AvatarWithName from "./AvatarWithName";
 
-export default function Contacts({ allContacts, currentUser }) {
+export default function Contacts({ allContacts, currentUser ,changeChat}) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImg, setCurrentUserImg] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
@@ -15,8 +15,10 @@ export default function Contacts({ allContacts, currentUser }) {
     }
   }, [currentUser]);
   
-
-  const changeCurrentChat = (index, contact) => {};
+  const changeCurrentChat = (index, contact) => {
+    setCurrentSelected(index);
+    changeChat(contact);
+  };
 
   return (
     <>
@@ -32,8 +34,9 @@ export default function Contacts({ allContacts, currentUser }) {
                 <div
                   key={contact._id}
                   className={`contact ${
-                    index === currentSelected ? "selected" : ""
+                    index === currentSelected ? "selected" : ""                   
                   }`}
+                  onClick={() => changeCurrentChat(index, contact)}
                 >
                   <div className="avatar">
                     <AvatarWithName

@@ -2,30 +2,20 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Robot from "../assests/robot.gif";
 
-export default function Welcome() {
-  const [userName, setUserName] = useState("");
+export default function Welcome({currentUser}) {
+  const [currentUserName, setCurrentUserName] = useState(undefined);
 
   useEffect(() => {
-    async function fetchData(){
-        try {
-            setUserName(
-              await JSON.parse(
-                localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-              ).username
-            );
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+    if (currentUser) {
+      setCurrentUserName(currentUser.username);
     }
-
-    fetchData()
-  }, []);
+  }, [currentUser]);
 
   return (
     <Container>
       <img src={Robot} />
       <h1>
-        Welcome, <span>{userName}!</span>
+        Welcome, <span>{currentUserName}!</span>
       </h1>
       <h3>Please select a chat to Start messaging.</h3>
     </Container>
