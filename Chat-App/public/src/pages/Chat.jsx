@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import styled from "styled-components";
-import { allUsersRoute, host } from "../utils/APIRoutes";
+import { allUsersRoute, getUserWithFriendsRoute, host } from "../utils/APIRoutes";
 import Contacts from "../components/ContactsChat";
 import Welcome from "../components/Welcome";
 import ChatContainer from "../components/ChatContainer";
@@ -16,17 +16,19 @@ export default function Chat() {
   const [currentUser, setCurrentUser] = useState(undefined);
   const [isLoaded,setIsLoaded] = useState(false)
 
-  async function fetchUser(){
+  async function fetchUser() {
     try {
       if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
         navigate("/login");
       } else {
-        const currentUserData= await JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
-        setCurrentUser(currentUserData);
-        setIsLoaded(true)
+        const currentUserData = await JSON.parse(
+          localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+        );
+        const userData = await axios.get(`${getUserWithFriendsRoute}/${currentUserData._id}`)
+        setCurrentUser(userData.data);
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     }
   }
 
@@ -40,24 +42,10 @@ export default function Chat() {
     }
   },[currentUser])
 
-  async function fetchContacts(){
-    try { 
-      if (currentUser) {
-        if (currentUser.isAvatarImageSet) {
-          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-          setContacts(data.data);
-        } else {
-          navigate("/setAvatar");
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-
   useEffect(() => {  
     if(currentUser){
-      fetchContacts()
+      setContacts(currentUser.friends)
+      setIsLoaded(true);
     }  
   }, [currentUser]);
 

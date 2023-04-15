@@ -6,3 +6,7 @@ export const allUsersRoute = `${host}/api/auth/allusers`
 export const logoutRoute = `${host}/api/auth/logout`
 export const sendMessageRoute = `${host}/api/messages/addmsg`
 export const getAllMessagesRoute = `${host}/api/messages/getmsg`
+export const addFriendRoute = `${host}/api/auth/addfriend`
+export const getUserWithFriendsRoute = `${host}/api/auth/userwithfriends`
+export const removeFriendRoute = `${host}/api/auth/removefriend`
+
