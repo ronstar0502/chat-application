@@ -12,26 +12,12 @@ export default function Welcome({currentUser}) {
   }, [currentUser]);
 
   return (
-    <Container>
-      <img src={Robot} />
+    <div className="flex justify-center items-center text-white flex-col">
+      <img src={Robot} className="h-[20rem]"/>
       <h1>
-        Welcome, <span>{currentUserName}!</span>
+        Welcome, <span className="text-[#4e0eff]">{currentUserName}!</span>
       </h1>
       <h3>Please select a chat to Start messaging.</h3>
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  flex-direction: column;
-  img {
-    height: 20rem;
-  }
-  span {
-    color: #4e0eff;
-  }
-`;

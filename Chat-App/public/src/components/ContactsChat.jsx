@@ -67,7 +67,7 @@ export default function Contacts({ allContacts, currentUser, changeChat }) {
             </div>
             <div>
               <button className="bg-blue-500 text-white py-1 px-4 rounded-md hover:bg-blue-700">
-                <Link to="/userProfile">Home</Link>
+                <Link to="/">Home</Link>
               </button>
             </div>
           </div>
