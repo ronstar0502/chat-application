@@ -36,6 +36,7 @@ const io = socket(server,{
     credentials:true,   
   }
 })
+app.set("socketio", io)
 
 global.onlineUsers = new Map()
 

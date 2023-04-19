@@ -25,45 +25,45 @@ export default function Contacts({ allContacts, currentUser, changeChat }) {
   return (
     <>
       {currentUserImg && currentUserName && (
-        <Container>
-          <div className="brand">
-            <img src={Logo} alt="" />
-            <h3>Snappy</h3>
+        <div className="grid grid-rows-[1fr,7fr,2fr] overflow-hidden bg-[#080420]">
+          <div className="flex items-center gap-4 justify-center">
+            <img src={Logo} alt="" className="h-8"/>
+            <h3 className="text-white uppercase">Snappy</h3>
           </div>
-          <div className="contacts">
+          <div className="flex flex-col items-center overflow-auto gap-2">
             {allContacts.map((contact, index) => {
               return (
                 <div
                   key={contact._id}
-                  className={`contact ${
-                    index === currentSelected ? "selected" : ""
+                  className={`contact min-h-[5rem] cursor-pointer w-[90%] rounded-sm p-1 flex gap-4 items-center transition-all duration-500 ease-in-out ${
+                    index === currentSelected ? "bg-[#9a86f3]" : "bg-[#ffffff34]"
                   }`}
                   onClick={() => changeCurrentChat(index, contact)}
                 >
-                  <div className="avatar">
+                  <div >
                     <AvatarWithName
                       name={contact.avatarImage}
                       alt={contact.avatarImage}
-                      className="image"
+                      className="h-12"
                     />
                   </div>
-                  <div className="username">
-                    <h3>{contact.username}</h3>
+                  <div>
+                    <h3 className="text-white">{contact.username}</h3>
                   </div>
                 </div>
               );
             })}
           </div>
-          <div className="current-user">
-            <div className="avatar">
+          <div className="bg-[#0d0d30] flex justify-center items-center gap-8">
+            <div className="w-16">
               <AvatarWithName
                 name={currentUserImg}
                 alt={currentUserImg}
-                className="img"
+                className="h-16 w-auto"
               />
             </div>
-            <div className="username">
-              <h2>{currentUserName}</h2>
+            <div className="text-white">
+              <h2 className="md:text-xl">{currentUserName}</h2>
             </div>
             <div>
               <button className="bg-blue-500 text-white py-1 px-4 rounded-md hover:bg-blue-700">
@@ -71,13 +71,13 @@ export default function Contacts({ allContacts, currentUser, changeChat }) {
               </button>
             </div>
           </div>
-        </Container>
+        </div>
       )}
     </>
   );
 }
 
-const Container = styled.div`
+/*const Container = styled.div`
   display: grid;
   grid-template-rows: 10% 75% 15%;
   overflow: hidden;
@@ -161,4 +161,4 @@ const Container = styled.div`
       }
     }
   }
-`;
+`;*/

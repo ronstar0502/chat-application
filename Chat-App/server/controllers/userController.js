@@ -95,9 +95,7 @@ module.exports.getAllUsers = async (req, res, next) => {
 module.exports.addFriend = async (req, res) => {
   const { userId, friendId } = req.body;
   try {
-    console.log("Finding user");
     const user = await User.findById(userId).populate("friends");
-    console.log("User found:", user);
 
     const isFriendAlreadyAdded = user.friends.some(
       (friend) => friend._id.toString() === friendId
@@ -107,12 +105,11 @@ module.exports.addFriend = async (req, res) => {
       return res.status(400).json({ message: "Friend already added" });
     }
     const friend = await User.findById(friendId);
-    console.log("friend found", friend);
-    console.log("Adding friend");
     await User.findByIdAndUpdate(userId, {
       $push: { friends: friend },
     });
-    console.log("Friend added");
+    const io = req.app.get("socketio")
+    io.emit("friendUpdate",{userId})
     res.status(200).json({ message: "Friend added successfully" });
   } catch (error) {
     console.error("Error in addFriend:", error);
@@ -121,7 +118,7 @@ module.exports.addFriend = async (req, res) => {
 }
 
 module.exports.removeFriend = async (req, res) => {
-  const { userId, friendId } = req.body;
+  const { userId, friendId} = req.body;
   try {
     // Check if the friend exists in the user's friends list
     const user = await User.findById(userId).populate("friends");
@@ -137,12 +134,13 @@ module.exports.removeFriend = async (req, res) => {
     await User.findByIdAndUpdate(userId, {
       $pull: { friends: friendId },
     });
-
+    const io = req.app.get("socketio")
+    io.emit("friendUpdate",{userId})
     res.status(200).json({ message: "Friend removed successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error removing friend", error });
   }
-};
+}
 
 
 

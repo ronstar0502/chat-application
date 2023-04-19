@@ -6,11 +6,13 @@ import {
   addFriendRoute,
   allUsersRoute,
   getUserWithFriendsRoute,
+  host,
   removeFriendRoute,
 } from "../utils/APIRoutes";
 import axios from "axios";
 import ContactsProfile from "../components/ContactsProfile";
 import Friends from "../components/Friends";
+import { io } from "socket.io-client";
 
 export default function UserProfile() {
   const navigate = useNavigate();
@@ -18,6 +20,8 @@ export default function UserProfile() {
   const [contacts, setContacts] = useState([]);
   const [friends, setFriends] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const [socketInstance, setSocketInstance] = useState(null);
 
   async function fetchUser() {
     try {
@@ -45,24 +49,77 @@ export default function UserProfile() {
     try {
       if (currentUser) {
         if (currentUser.isAvatarImageSet) {
-          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-          setContacts(data.data);
+          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`)
+
+          const nonFriendContacts = data.data.filter((contact) => {
+            return !currentUser.friends.some(
+              (friend) => friend._id === contact._id
+            )
+          })
+
+          setContacts(nonFriendContacts)
           setIsLoaded(true);
         } else {
-          navigate("/setAvatar");
+          navigate("/setAvatar")
         }
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching data:", error)
+    }
+  }
+  async function fetchFriends() {
+    try {
+      if (currentUser) {
+        setFriends(currentUser.friends);
+      }
+    } catch (error) {
+      console.error("Error fetching friends:", error);
     }
   }
 
   useEffect(() => {
-    if (currentUser) {
-      fetchContacts();
-      setFriends(currentUser.friends);
+    if (currentUser) {  
+      const socket = io(host)
+      setSocketInstance(socket)
+
+      socket.emit("add-user", currentUser._id)
+
+      socket.on("friendUpdate", async () => {
+        console.log("Friend update received")
+        try {
+          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+          
+          const updatedUserData = await axios.get(
+            `${getUserWithFriendsRoute}/${currentUser._id}`
+          )
+
+          setCurrentUser(updatedUserData.data)
+
+          const nonFriendContacts = data.data.filter((contact) => {
+            return !currentUser.friends.some(
+              (friend) => friend._id === contact._id
+            )
+          })
+
+          const removedFriend = currentUser.friends.find(
+            (friend) => !updatedUserData.data.friends.some((updatedFriend) => updatedFriend._id === friend._id)
+          )
+
+          if (removedFriend) {
+            nonFriendContacts.push(removedFriend);
+          }
+
+          setContacts(nonFriendContacts)
+          setFriends(updatedUserData.data.friends);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      })   
+      fetchContacts()  
+      fetchFriends()
     }
-  }, [currentUser]);
+  }, [currentUser])
+
 
   async function addFriend(currentUserId, addFriendId) {
     await axios.post(addFriendRoute, {

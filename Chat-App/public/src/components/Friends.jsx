@@ -6,7 +6,6 @@ export default function Friends({ friends, removeFriend }) {
 
   useEffect(() => {
     if (friends) {
-      console.log(friends);
       setIsLoaded(true);
     }
   }, [friends]);

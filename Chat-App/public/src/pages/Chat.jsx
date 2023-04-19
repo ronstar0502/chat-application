@@ -54,8 +54,8 @@ export default function Chat() {
   };
 
   return (
-    <Container>
-      <div className="container">
+    <div className="h-screen w-screen flex flex-col justify-center items-center gap-4 bg-[#131324]">
+      <div className="container h-[85vh] w-[85vw] bg-[#00000076] grid grid-cols-[1fr,3fr] md:grid-cols-[2fr,3fr] gap-4">
         <Contacts allContacts={contacts} currentUser={currentUser} changeChat={handleChatChange}/>
         {
           isLoaded && currentChat===undefined ?(
@@ -66,11 +66,11 @@ export default function Chat() {
         }
       </div>
       
-    </Container>
+    </div>
   );
 }
 
-const Container = styled.div`
+/*const Container = styled.div`
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -90,4 +90,4 @@ const Container = styled.div`
       grid-template-columns: 35% 65%;
     }
   }
-`;
+`;*/
