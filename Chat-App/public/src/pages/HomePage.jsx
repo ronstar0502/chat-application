@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UserProfile from "./UserProfile";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import AvatarWithName from "../components/AvatarWithName";
 import Logout from "../components/Logout";
 
@@ -28,26 +28,36 @@ export default function HomePage() {
   }, []);
 
   return (
-    <>
+    <div className="w-full h-screen bg-gradient-to-r from-neutral-600 from-15% via-blue-500 via-40% to-neutral-600 to-90% ... shadow-md p-4">
       {currentUser && (
         <div>
-            <Logout/>
+          <div>
+            <Logout className="justify-items-end"/>
+          </div>
           <div>
             <div>
               <AvatarWithName
                 name={currentUser.avatarImage}
                 alt={currentUser.avatarImage}
-                className=""
+                className="h-32"
               />
-              <span>{currentUser.username}</span>
+              <span className="text-stone-200">Hello {currentUser.username}</span>
             </div>
           </div>
           <div>
-            <Link to="/userProfile">Profile</Link>
-            <Link to="/chat">Chat</Link>
+            <div>
+              <button>
+                <Link to="/userProfile">Profile</Link>
+              </button>
+            </div>
+            <div>
+              <button>
+                <Link to="/chat">Chat</Link>
+              </button>
+            </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

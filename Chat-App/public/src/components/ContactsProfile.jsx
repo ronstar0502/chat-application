@@ -22,19 +22,20 @@ export default function ContactsProfile({
   }
 
   return (
-    <>
+    <div >
       {contacts.map((contact, index) => {
         return (
-          <div key={index}>
+          <div key={index} >
             <div>
               <AvatarWithName
                 name={contact.avatarImage}
                 alt={contact.avatarImage}
-                className=""
+                className="h-32 "
               />
               <span>{contact.username}</span>
             </div>
             <button
+              className="bg-blue-500 text-white py-1 px-4 rounded-md hover:bg-blue-700"
               onClick={() => handleAddFriend(currentUser._id, contact._id)}
             >
               Add Friend
@@ -42,6 +43,6 @@ export default function ContactsProfile({
           </div>
         );
       })}
-    </>
+    </div>
   );
 }

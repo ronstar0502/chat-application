@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from "react";
 
+
 export default function AvatarWithName(props){
     const [avatarUrl, setAvatarUrl] = useState('');
   
@@ -10,7 +11,7 @@ export default function AvatarWithName(props){
   
     return (
       <div>
-        <img src={avatarUrl} alt={props.alt} height="100" className={props.className} />
+        <img src={avatarUrl} alt={props.alt} className={props.className} />
       </div>
     );
   }

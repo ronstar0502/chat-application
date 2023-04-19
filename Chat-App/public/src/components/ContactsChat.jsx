@@ -3,8 +3,9 @@ import styled from "styled-components";
 import Logo from "../assests/logo.svg";
 import AvatarWithName from "./AvatarWithName";
 import Logout from "./Logout";
+import { Link } from "react-router-dom";
 
-export default function Contacts({ allContacts, currentUser ,changeChat}) {
+export default function Contacts({ allContacts, currentUser, changeChat }) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImg, setCurrentUserImg] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
@@ -15,7 +16,7 @@ export default function Contacts({ allContacts, currentUser ,changeChat}) {
       setCurrentUserName(currentUser.username);
     }
   }, [currentUser]);
-  
+
   const changeCurrentChat = (index, contact) => {
     setCurrentSelected(index);
     changeChat(contact);
@@ -35,7 +36,7 @@ export default function Contacts({ allContacts, currentUser ,changeChat}) {
                 <div
                   key={contact._id}
                   className={`contact ${
-                    index === currentSelected ? "selected" : ""                   
+                    index === currentSelected ? "selected" : ""
                   }`}
                   onClick={() => changeCurrentChat(index, contact)}
                 >
@@ -65,7 +66,9 @@ export default function Contacts({ allContacts, currentUser ,changeChat}) {
               <h2>{currentUserName}</h2>
             </div>
             <div>
-              <Logout/>
+              <button className="bg-blue-500 text-white py-1 px-4 rounded-md hover:bg-blue-700">
+                <Link to="/userProfile">Home</Link>
+              </button>
             </div>
           </div>
         </Container>
