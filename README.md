@@ -1,4 +1,4 @@
-# chat-app
+# chat application
 
 a chat application using React , mongoDb as database and socket.io
 
